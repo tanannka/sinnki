@@ -1,1 +1,22 @@
-LINEを使って予約システムを作っています。
+function addEventsToCalendar() {
+  var spreadsheetId = '1ehiZnNm18nZmP5kYbn5L5BTa8Xfq_0EUPEpJIERPl3M';
+  var calendarId = '9onigiri@gmail.com';
+  var sheet = SpreadsheetApp.openById(spreadsheetId).getActiveSheet();
+  var events = sheet.getRange('A2:E' + sheet.getLastRow()).getValues();
+
+  var calendar = CalendarApp.getCalendarById(calendarId);
+
+  for (var i = 0; i < events.length; i++) {
+    var [name, contact, service, date, time] = events[i];
+
+    // 日付と時間のフォーマットを修正する場合
+    var fullDate = new Date(date + ' ' + time);
+
+    // イベントのタイトルと説明を設定
+    var title = name + ': ' + service;
+    var description = '連絡先: ' + contact + '\nサービス内容: ' + service;
+
+    // イベントをカレンダーに追加
+    calendar.createEvent(title, fullDate, fullDate, {description: description});
+  }
+}
